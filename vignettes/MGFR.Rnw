@@ -1,0 +1,172 @@
+%\VignetteIndexEntry{Using MGFR}
+%\VignetteKeywords{marker genes, RNA-seq}
+%\VignetteDepends{annotate}
+%\VignettePackage{MGFR}
+%\DefineVerbatimEnvironment{Sinput}{Verbatim} {xleftmargin=2em}
+%\DefineVerbatimEnvironment{Soutput}{Verbatim}{xleftmargin=2em}
+%\DefineVerbatimEnvironment{Scode}{Verbatim}{xleftmargin=2em}
+%\fvset{listparameters={\setlength{\topsep}{0pt}}}
+%\renewenvironment{Schunk}{\vspace{\topsep}}{\vspace{\topsep}}
+
+\newcommand{\Robject}[1]{{\texttt{#1}}}
+\newcommand{\Rfunction}[1]{{\texttt{#1}}}
+\newcommand{\Rpackage}[1]{{\textit{#1}}}
+\newcommand{\Rclass}[1]{{\textit{#1}}}
+\newcommand{\Rfunarg}[1]{{\textit{#1}}}
+
+\documentclass[10pt,a4paper]{article}
+\usepackage{a4wide}
+\usepackage[utf8]{inputenc} 
+% Change the Sweave path if the TeX engine does not find the file Sweave.sty
+\usepackage{Sweave}
+\usepackage{hyperref}
+
+\begin{document}
+
+\title{MGFR: Marker Gene Finder in RNA-seq data}
+\author{Khadija El Amrani
+	\footnote{Charité-Universitätsmedizin Berlin, Berlin Brandenburg Center for Regenerative Therapies (BCRT), 13353 Berlin, Germany}
+	\footnote{Package maintainer, Email: \texttt{khadija.el-amrani@charite.de}}
+}
+\date{\today}
+
+\maketitle
+
+\tableofcontents
+
+\section{Introduction}
+
+Identification of marker genes associated with a specific tissue/cell
+type is a fundamental challenge in genetic and genomic research. In
+addition to other genes, marker genes are of great importance for
+understanding the gene function, the molecular mechanisms underlying
+complex diseases, and may lead to the development of new drugs. We
+updated our marker tool MGFM \cite{ElAmrani2015} to work with RNA-seq data.\\
+\texttt{MGFR} is a package enabling the detection of marker genes from RNA-seq data.
+
+\section{Requirements}
+The tool expects replicates for each sample type. Using replicates has the advantage of increased precision of gene expression measurements and allows smaller changes to be detected. It is not necessary to use the same number of replicates for all sample types. Normalization is necessary before any analysis to ensure that differences in intensities are indeed due to differential expression, and not to some experimental factors that add systematic biases to the measurements.
+
+
+
+%\newpage
+\section{Contents of the package}
+
+The \texttt{MGFR} package contains the following objects:
+<<>>=
+library("MGFR")
+ls("package:MGFR")
+@
+The functions \texttt{getMarkerGenes.rnaseq()} and \texttt{getMarkerGenes.rnaseq.html()} are the main functions, and \texttt{ref.mat} is an example RNA-seq data set, which is used for demonstration.
+
+
+\subsection{\texttt{getMarkerGenes.rnaseq}}
+
+\texttt{getMarkerGenes.rnaseq()} performs marker gene detection using
+a given RNA-seq expression matrix and returns a list of marker genes associated with each given sample type.
+
+\subsubsection{Parameter Settings}
+\label{subsec:Input}
+\begin{enumerate}
+	\item \textit{data.mat}: RNA-Seq gene expression matrix with genes corresponding to rows and samples corresponding to columns. Please note that replicate samples should have the same label.
+	\item \textit{samples2compare} (optional): A character vector with the sample names to be compared (e.g.
+c("liver", "lung", "brain")). By default all samples are used.
+	\item \textit{annotate} (optional): A boolean value. If TRUE the gene symbol and the entrez gene id are shown. Default is TRUE. For mapping between gene ids and gene symbols, the Bioconductor R package \Rpackage{biomaRt} is used.
+	\item \textit{gene.ids.type}: Type of the used gene
+          identifiers, the following gene identifiers are supported:
+          ensembl, refseq and ucsc gene ids. Default is ensembl.
+	\item \textit{score.cutoff} (optional): It can take values in the interval [0,1]. This value is used to filter the markers according to their  specificity score. The default value is 1 (no filtering).
+\end{enumerate}
+\subsubsection{Output}
+The function \Rfunction{getMarkerGenes.rnaseq()} returns a list as
+output. The entries of the result list contain the markers that are
+associated with each given sample type. For each marker the gene id, the gene symbol, the entrez gene id and the corresponding specificity score are shown in this order.
+
+
+\subsection{\texttt{getMarkerGenes.rnaseq.html}}
+
+\texttt{getMarkerGenes.rnaseq.html()} is a function to detect marker genes using normalized RNA-seq data and show the marker genes in HTML tables with links to various online annotation sources (Ensembl, GenBank and EntrezGene repositories).
+
+\subsubsection{Parameter Settings}
+\label{subsec:Input}
+\begin{enumerate}
+	\item \textit{data.mat}: RNA-Seq gene expression matrix with genes corresponding to rows and samples corresponding to columns. Please note that replicate samples should have the same label.
+	\item \textit{samples2compare} (optional): A character vector with the sample names to be compared (e.g.
+c("liver", "lung", "brain")). By default all samples are used.
+	\item \textit{gene.ids.type}: Type of the used gene
+          identifiers, the following gene identifiers are supported:
+          ensembl, refseq and ucsc gene ids. Default is ensembl.
+	\item \textit{score.cutoff} (optional): It can take values in the interval [0,1]. This value is used to filter the markers according to their  specificity score. The default value is 1 (no filtering).
+	\item \textit{directory}: Path to the directory where to save the html pages, default is the current working directory.
+\end{enumerate}
+
+\subsubsection{Output}
+The function \Rfunction{getMarkerGenes.rnaseq.html()} is used only for the side effect of creating HTML tables.
+
+
+\subsection{Example data}
+\texttt{ref.mat}: is an RNA-seq gene expression data set derived from
+5 tissue types (lung, liver, heart, kidney, and brain) from the
+ArrayExpress (www.ebi.ac.uk/arrayexpress) database (E-MTAB-1733 \cite{Fagerberg2014}). Each tissue type is represented by 3 replicates.
+
+<<echo=FALSE>>=
+options(width=60)
+@
+<<>>=
+data("ref.mat")
+dim(ref.mat)
+colnames(ref.mat)
+@
+
+\section{Processing of RNA-seq data}
+The reads from the study E-MTAB-1733 were mapped to the GRCh37 version
+of the human genome with Tophat v2.1.0. FPKM (fragments per kilobase
+of exon model per million mapped reads) values were calculated using
+Cufflinks v2.2.1. The used example data was extracted after
+processing of all samples and averaging across technical replicates.
+
+\section{Marker search}
+To use the package, we should load it first.
+<<reference>>=
+library(MGFR)
+data("ref.mat")
+markers.list <- getMarkerGenes.rnaseq(ref.mat, samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
+names(markers.list)
+# show the first 20 markers of liver
+markers.list[["liver_markers"]][1:20]
+@
+
+\section{MGFR algorithm details}
+Marker genes are identified as follows:
+\begin{itemize}
+\item \textbf{Sort of expression values for each gene:} In this step the
+expression values are sorted in decreasing order.
+%\item \textbf{Identification of cut-points}:
+\item \textbf{Marker selection}: To analyze the sorted distribution of expression values of a gene to define if it is a potential candidate marker we define cut-points as
+ those that segregate samples of different types. A sorted distribution can have multiple cut-points; a cut-point can segregate one sample type from the others,
+  or it can segregate multiple sample types from multiple sample types. Each cut-point is defined by the ratio of the expression averages of the groups of samples adjacent to it. 
+  That is, given a distribution with n cut-points and n+1 segregated groups, cut-point i receives a score that is the ratio of the average expression of samples in the group
+   i+1 (following the cut-point) divided by that of group i (preceding the cut-point). This value is < 1 because the values are sorted in decreasing order.
+    The closer the values, the closer the score to 1 and therefore the smaller is the gap between expression values at the cut-point. The specificity score of a marker gene is defined as 
+    the score of the first cut-point. For simplicity, we take only genes as markers if they have a cut-point that segregates one tissue at high expression from the rest. 
+    We disregard negative markers (segregating samples from one tissue at low expression) or multiple tissue markers (segregating samples from more than one tissue from other multiple tissues). 
+\end{itemize}
+
+\section{Conclusion}
+The development of this tool was motivated by the desire to provide a software package that enables the user to get marker genes associated with a set of samples of interest. 
+A further objective of this tool was to enable the user to modify the set of samples of interest by adding or removing samples in a simple way. \\
+
+\section{R sessionInfo}
+
+The results in this file were generated using the following packages:
+
+<<sessionInfo>>=
+sessionInfo()
+@
+\nocite{Team2007}
+\bibliographystyle{unsrt}
+\bibliography{references}
+
+\end{document}
+
+
