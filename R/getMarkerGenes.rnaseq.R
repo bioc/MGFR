@@ -7,8 +7,15 @@
 ## value to filter the resulted markers output: a list with the corresponding markers to each
 ## sample type
 
-getMarkerGenes.rnaseq <- function(data.mat, samples2compare = "all", annotate = TRUE, gene.ids.type = "ensembl", 
+getMarkerGenes.rnaseq <- function(data.mat, class.vec = colnames(data.mat), samples2compare = "all", annotate = FALSE, gene.ids.type = "ensembl", 
     score.cutoff = 1) {
+    if(length(class.vec) == dim(data.mat)[2]){
+    
+        colnames(data.mat) <- class.vec
+
+    }else{
+    stop("class.vec should have the same length as the number of columns of data.mat!!")
+    }
     
     if (length(samples2compare) > 1) {
         if (any(!samples2compare %in% colnames(data.mat))) {
@@ -26,6 +33,7 @@ getMarkerGenes.rnaseq <- function(data.mat, samples2compare = "all", annotate = 
     cat("Detecting marker genes...\n")
     res.list <- apply(data.mat, 1, .isMarker.rnaseq, rep.vec = rep.vec)
     res.list[sapply(res.list, is.null)] <- NULL
+    if(length(res.list) > 0) {
     mar.len <- length(unlist(res.list))
     samples.vec <- unname(unlist(res.list))[seq(1, mar.len, 2)]
     scores.vec <- round(as.numeric(unname(unlist(res.list))[seq(2, mar.len, 2)]), digits = 4)
@@ -61,4 +69,8 @@ getMarkerGenes.rnaseq <- function(data.mat, samples2compare = "all", annotate = 
     names(markers.list) <- paste(u.snames, "markers", sep = "_")
     cat("Done! \n")
     return(markers.list)
+    } else{
+    cat("No markers found!!\n This method is designed to be used with few replicates for each sample type!!\n
+Please try with fewer replicates!!")
+    }
 }

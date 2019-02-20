@@ -7,13 +7,17 @@
 Function to detect marker genes using normalized RNA-seq data
 }
 \usage{
-getMarkerGenes.rnaseq(data.mat, samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
+getMarkerGenes.rnaseq(data.mat, class.vec=colnames(data.mat), samples2compare="all", annotate=FALSE, gene.ids.type="ensembl", score.cutoff=1)
 }
 
 \arguments{
   \item{data.mat}{
 RNA-seq gene expression matrix with genes corresponding to rows
 and samples corresponding to columns.
+}
+
+ \item{class.vec}{
+A character vector containing the classes of samples (columns) of data.mat in the same order as provided in the matrix.
 }
   \item{samples2compare}{
 A character vector with the sample names to be compared (e.g.
@@ -40,12 +44,12 @@ A list with marker genes associated with each sample type.
 }
 
 \author{
-Khadija El Amrani <khadija.el-amrani@charite.de>
+Khadija El Amrani <a.khadija@gmx.de>
 }
 
 \examples{
 data(ref.mat)
-res.list <- getMarkerGenes.rnaseq(ref.mat, samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
+res.list <- getMarkerGenes.rnaseq(ref.mat, class.vec = colnames(ref.mat), samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
 names(res.list)
 ## show the first 20 markers of liver
 res.list[["liver_markers"]][1:20]

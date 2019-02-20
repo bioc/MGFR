@@ -1,9 +1,9 @@
 Package: MGFR
 Type: Package
 Title: Marker Gene Finder in RNA-seq data
-Version: 1.9.1
+Version: 1.9.2
 Author: Khadija El Amrani
-Maintainer: Khadija El Amrani <khadija.el-amrani@charite.de>
+Maintainer: Khadija El Amrani <a.khadija@gmx.de>
 Description: The package is designed to detect marker genes from
         RNA-seq data.
 Depends: R (>= 3.3)

@@ -7,8 +7,15 @@
 ## is the current working directory output: HTML tables containing marker genes for each
 ## sample type, as well as links to various online annotation sources (Ensembl, GenBank and
 ## EntrezGene repositories)
-getMarkerGenes.rnaseq.html <- function(data.mat, samples2compare = "all", gene.ids.type = "ensembl", 
+getMarkerGenes.rnaseq.html <- function(data.mat, class.vec = colnames(data.mat), samples2compare = "all", gene.ids.type = "ensembl", 
     score.cutoff = 1, directory = getwd()) {
+    if(length(class.vec) == dim(data.mat)[2]){
+    
+        colnames(data.mat) <- class.vec
+
+    }else{
+    stop("class.vec should have the same length as the number of columns of data.mat!!")
+    }
     if (length(samples2compare) > 1) {
         if (any(!samples2compare %in% colnames(data.mat))) {
             stop("The samples to compare should be included in the data matrix!!")

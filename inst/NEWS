@@ -1,2 +1,6 @@
 MGFR 0.99.2 (build 1. June 2016)
 - First submission to BioConductor 
+Changes in version 1.9.2 (29.01.2019)
+- Added an argument class.vec to the function getMarkerGenes.rnaseq() to provide the classes of samples in the data matrix
+- Changed default of the argument annotate to FALSE
+- Fixed an error caused when no markers are found

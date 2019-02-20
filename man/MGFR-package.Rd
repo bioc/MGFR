@@ -12,7 +12,7 @@ The package is designed to detect marker genes from RNA-seq data
 \tabular{ll}{
 Package: \tab MGFR\cr
 Type: \tab Package\cr
-Version: \tab 1.0.0\cr 
+Version: \tab 1.9.2\cr 
 License: \tab GPL-3 \cr
 }
 
@@ -26,7 +26,7 @@ Maintainer: Khadija El Amrani <khadija.el-amrani@charite.de>
 
 \examples{
 data(ref.mat)
-res.list <- getMarkerGenes.rnaseq(ref.mat, samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
+res.list <- getMarkerGenes.rnaseq(ref.mat, class.vec=colnames(ref.mat), samples2compare="all", annotate=TRUE, gene.ids.type="ensembl", score.cutoff=1)
 names(res.list)
 ## show the first 20 markers of liver
 res.list[["liver_markers"]][1:20]

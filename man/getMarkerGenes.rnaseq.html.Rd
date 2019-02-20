@@ -7,13 +7,16 @@
 Function to detect marker genes using normalized RNA-seq data and show the marker genes in HTML tables with links to various online annotation sources (Ensembl, GenBank and EntrezGene repositories)
 }
 \usage{
-getMarkerGenes.rnaseq.html(data.mat, samples2compare="all", gene.ids.type="ensembl",score.cutoff=1, directory = getwd())
+getMarkerGenes.rnaseq.html(data.mat, class.vec=colnames(data.mat), samples2compare="all", gene.ids.type="ensembl",score.cutoff=1, directory = getwd())
 }
 
 \arguments{
   \item{data.mat}{
 RNA-seq gene expression matrix with genes corresponding to rows
 and samples corresponding to columns.
+}
+ \item{class.vec}{
+A character vector containing the classes of samples (columns) of data.mat in the same order as provided in the matrix.
 }
   \item{samples2compare}{
 A character vector with the sample names to be compared (e.g.
@@ -39,12 +42,12 @@ This function is used only for the side effect of creating HTML tables.
 }
 
 \author{
-Khadija El Amrani <khadija.el-amrani@charite.de>
+Khadija El Amrani <a.khadija@gmx.de>
 }
 
 \examples{
 data(ref.mat)
-getMarkerGenes.rnaseq.html(ref.mat, samples2compare="all", gene.ids.type="ensembl", score.cutoff=1,directory = getwd())
+getMarkerGenes.rnaseq.html(ref.mat, class.vec = colnames(ref.mat), samples2compare="all", gene.ids.type="ensembl", score.cutoff=1,directory = getwd())
 }
 \keyword{ marker genes }
 \keyword{ RNA-seq data }
