@@ -44,7 +44,7 @@ getMarkerGenes.rnaseq.html <- function(data.mat, class.vec = colnames(data.mat),
         stop("Only ensembl ids are supported!")
     }
     cat("Mapping gene IDs to gene symbols...\n")
-    annot.df <- .get.genes.rnaseq(IDs = rownames(data.mat), gene.identifiers = gene.ids.type)
+    annot.df <- .get.genes.rnaseq2(IDs = rownames(data.mat), gene.identifiers = gene.ids.type)
     cat("Creating html pages...\n")
     for (i in seq_along(u.snames)) {
         inds <- which(samples.vec == u.snames[i])
@@ -54,7 +54,7 @@ getMarkerGenes.rnaseq.html <- function(data.mat, class.vec = colnames(data.mat),
         genes.inds <- match(names(sort.scores), annot.df[, "ensembl_gene_id"])
         
         res.df <- as.data.frame(cbind(Gene_ID = names(sort.scores), Gene_Symbol = annot.df[genes.inds, 
-            "hgnc_symbol"], Entrez_Id = annot.df[genes.inds, "entrezgene"], Description = annot.df[genes.inds, 
+            "hgnc_symbol"], Entrez_Id = annot.df[genes.inds, "entrezgene_id"], Description = annot.df[genes.inds, 
             "description"], Score = as.numeric(sort.scores)))
         
         suppressWarnings(htmlpage(res.df[, c(1, 2, 3)], paste(directory, paste(u.snames[i], 
