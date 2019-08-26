@@ -1,5 +1,6 @@
 \name{grid-internal}
 \alias{.get.genes.rnaseq }
+\alias{.get.genes.rnaseq2 }
 \alias{.isMarker.rnaseq}
 \title{Internal MGFR Functions}
 \description{

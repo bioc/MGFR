@@ -37,21 +37,44 @@
     if (gene.identifiers == "ensembl") {
         mart <- useDataset("hsapiens_gene_ensembl", useMart("ENSEMBL_MART_ENSEMBL", host = "www.ensembl.org"))
         ann.df <- getBM(filters = "ensembl_gene_id", attributes = c("ensembl_gene_id", "hgnc_symbol", 
-            "entrezgene", "description"), values = IDs, mart = mart)
+            "entrezgene_id"), values = IDs, mart = mart)
         return(ann.df)
     }
     if (gene.identifiers == "ucsc") {
         # Convert from UCSC IDs to Gene Name and Description
-        ann.df <- getBM(attributes = c("ucsc", "hgnc_symbol", "entrezgene", "description"), 
+        ann.df <- getBM(attributes = c("ucsc", "hgnc_symbol", "entrezgene_id"), 
             filters = "ucsc", values = IDs, mart = mart)  #, uniqueRows=T)
         return(ann.df)
     }
     if (gene.identifiers == "refseq") {
         # Convert RefSEq IDs
-        ann.df <- getBM(attributes = c("refseq_mrna", "hgnc_symbol", "entrezgene", "description"), 
+        ann.df <- getBM(attributes = c("refseq_mrna", "hgnc_symbol", "entrezgene_id"), 
             filters = "refseq_mrna", values = IDs, mart = mart)  #, uniqueRows=T)
         return(ann.df)
     }
 }
 
+.get.genes.rnaseq2 <- function(IDs = "", gene.identifiers = "ensembl") {
+    
+    # if(!require('biomaRt')) { stop('Please install the R package biomaRt to map the gene
+    # identifiers to gene symbols!') } require('biomaRt')
+    if (gene.identifiers == "ensembl") {
+        mart <- useDataset("hsapiens_gene_ensembl", useMart("ENSEMBL_MART_ENSEMBL", host = "www.ensembl.org"))
+        ann.df <- getBM(filters = "ensembl_gene_id", attributes = c("ensembl_gene_id", "hgnc_symbol", 
+            "entrezgene_id", "description"), values = IDs, mart = mart)
+        return(ann.df)
+    }
+    if (gene.identifiers == "ucsc") {
+        # Convert from UCSC IDs to Gene Name and Description
+        ann.df <- getBM(attributes = c("ucsc", "hgnc_symbol", "entrezgene_id", "description"), 
+            filters = "ucsc", values = IDs, mart = mart)  #, uniqueRows=T)
+        return(ann.df)
+    }
+    if (gene.identifiers == "refseq") {
+        # Convert RefSEq IDs
+        ann.df <- getBM(attributes = c("refseq_mrna", "hgnc_symbol", "entrezgene_id", "description"), 
+            filters = "refseq_mrna", values = IDs, mart = mart)  #, uniqueRows=T)
+        return(ann.df)
+    }
+}
 

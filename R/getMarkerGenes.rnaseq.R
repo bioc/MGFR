@@ -53,7 +53,7 @@ getMarkerGenes.rnaseq <- function(data.mat, class.vec = colnames(data.mat), samp
             sort.scores <- sort.scores[which(sort.scores <= score.cutoff)]
             genes.inds <- match(names(sort.scores), annot.df[, "ensembl_gene_id"])
             markers.list[[i]] <- paste(names(sort.scores), annot.df[genes.inds, "hgnc_symbol"], 
-                annot.df[genes.inds, "entrezgene"], unname(sort.scores), sep = " : ")
+                annot.df[genes.inds, "entrezgene_id"], unname(sort.scores), sep = " : ")
         }
         
     } else {
